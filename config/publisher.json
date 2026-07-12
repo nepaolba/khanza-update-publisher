@@ -1,0 +1,16 @@
+{
+    "projectName": "SIMRS Khanza",
+    "version": "1.0.0",
+    "sourceDirectory": "D:/SIMRS-KHANZA",
+    "releaseDirectory": "./release",
+    "algorithm": "sha256",
+    "ignore": [
+        ".git",
+        ".github",
+        ".idea",
+        ".vscode",
+        "node_modules",
+        "logs",
+        "release"
+    ]
+}

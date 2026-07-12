@@ -1,4 +1,14 @@
-console.log("======================================");
-console.log("SIMRS Khanza Update Publisher");
-console.log("Version : 1.0.0");
-console.log("======================================");
+import loadConfig from "./config/config.js";
+
+try {
+    const config = loadConfig();
+    console.log("===================================");
+    console.log(`Project : ${config.projectName}`);
+    console.log(`Version : ${config.version}`);
+    console.log(`Source  : ${config.sourceDirectory}`);
+    console.log(`Release : ${config.releaseDirectory}`);
+    console.log("===================================");
+} catch (error) {
+    console.error("Error loading config:", error.message);  
+    process.exit(1);
+}
