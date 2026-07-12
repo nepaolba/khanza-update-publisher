@@ -1,14 +1,29 @@
 import loadConfig from "./config/config.js";
+import scanner from "./scanner/index.js";
 
-try {
-    const config = loadConfig();
-    console.log("===================================");
-    console.log(`Project : ${config.projectName}`);
-    console.log(`Version : ${config.version}`);
-    console.log(`Source  : ${config.sourceDirectory}`);
-    console.log(`Release : ${config.releaseDirectory}`);
-    console.log("===================================");
-} catch (error) {
-    console.error("Error loading config:", error.message);  
-    process.exit(1);
+async function main() {
+
+    try {
+
+        const config = loadConfig();
+
+        const files = await scanner({
+            sourceDirectory: config.sourceDirectory,
+            ignore: config.ignore
+        });
+
+        console.table(files);
+
+        console.log(`Total file : ${files.length}`);
+
+    } catch (error) {
+
+        console.error(error.message);
+
+        process.exit(1);
+
+    }
+
 }
+
+main();
