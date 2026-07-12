@@ -1,71 +1,42 @@
-import loadConfig from "./config/config.js";
-import scanner from "./scanner/index.js";
-import hash from "./hash/index.js";
-import compare from "./compare/index.js";
-import {buildManifest, readManifest, writeManifest} from "./manifest/index.js";
-import { buildRelease } from "./release/index.js";
+import app from "./app.js";
+import {
+    banner,
+    getCommand
+} from "./cli/index.js";
+
 async function main() {
 
-    const config = loadConfig();
+    banner();
 
-    const files = await scanner({
-        sourceDirectory: config.sourceDirectory,
-        ignore: config.ignore
-    });
+    const command = getCommand();
 
-    const hashedFiles = await hash(files);
+    switch (command) {
 
-    // Membuat manifest baru dari hasil scan dan hash
-    const newManifest = buildManifest(config.version,hashedFiles );
+        case "publish":
 
-    // Membaca manifest lama
-    const oldManifest = await readManifest("./release/manifest.json");
-    let compareResult;
+            await app();
 
-    if (oldManifest === null) {
+            break;
 
-       console.log("Publish pertama.");
+        case "version":
 
-    compareResult = {
-        added: newManifest.files,
-        modified: [],
-        deleted: [],
-        unchanged: []
-    };
+            console.log("Khanza Update Publisher v1.0.0");
 
-    } else {
-compareResult = compare(
-        oldManifest.files,
-        newManifest.files
-    );
+            break;
 
-    console.log("Added     :", compareResult.added.length);
-    console.log("Modified  :", compareResult.modified.length);
-    console.log("Deleted   :", compareResult.deleted.length);
-    console.log("Unchanged :", compareResult.unchanged.length);
+        default:
+
+            console.log(`Command "${command}" tidak dikenal.`);
+            process.exit(1);
 
     }
-
-    await buildRelease({
-
-    config,
-
-    compareResult,
-
-    releaseDirectory: "./release"
-
-});
-
-   await writeManifest(
-    "./release/manifest.json",
-    newManifest
-);
-
-    console.log("Manifest berhasil dibuat.");
 
 }
 
 main().catch(error => {
+
     console.error(error);
+
     process.exit(1);
+
 });
