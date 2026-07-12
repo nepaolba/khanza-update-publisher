@@ -1,5 +1,6 @@
 import loadConfig from "./config/config.js";
 import scanner from "./scanner/index.js";
+import hash from "./hash/index.js";
 
 async function main() {
 
@@ -12,9 +13,16 @@ async function main() {
             ignore: config.ignore
         });
 
-        console.table(files);
+        const hashed = await hash(files);
 
-        console.log(`Total file : ${files.length}`);
+        console.table(
+            hashed.map(file => ({
+                file: file.relativePath,
+                sha256: file.sha256.substring(0, 16) + "..."
+            }))
+        );
+
+        console.log(`Total file : ${hashed.length}`);
 
     } catch (error) {
 
