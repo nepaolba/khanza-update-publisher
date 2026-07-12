@@ -1,40 +1,44 @@
 import manifestMap from "./manifestMap.js";
+import createCompareResult from "./result.js";
 
-export default function compare(oldManifest = [], newManifest = []) {
+export default function compare(oldFiles = [], newFiles = []) {
 
-    const oldMap = manifestMap(oldManifest);
-    const newMap = manifestMap(newManifest);
+    const result = createCompareResult();
 
-    const result = {
-        added: [],
-        modified: [],
-        deleted: [],
-        unchanged: []
-    };
+    const oldMap = manifestMap(oldFiles);
+    const newMap = manifestMap(newFiles);
 
     // cek file baru / berubah / tetap
-    for (const file of newManifest) {
+    for (const file of newFiles) {
 
         const oldFile = oldMap.get(file.relativePath);
 
         if (!oldFile) {
+
             result.added.push(file);
             continue;
+
         }
 
         if (oldFile.sha256 === file.sha256) {
+
             result.unchanged.push(file);
+
         } else {
+
             result.modified.push(file);
+
         }
 
     }
 
-    // cek file yang dihapus
-    for (const file of oldManifest) {
+    // cek file dihapus
+    for (const file of oldFiles) {
 
         if (!newMap.has(file.relativePath)) {
+
             result.deleted.push(file);
+
         }
 
     }
