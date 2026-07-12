@@ -2,16 +2,9 @@ import loadConfig from "./config/config.js";
 import scanner from "./scanner/index.js";
 import hash from "./hash/index.js";
 import compare from "./compare/index.js";
-
-import {
-    buildManifest,
-    readManifest,
-    writeManifest
-} from "./manifest/index.js";
-
-import {
-    buildRelease
-} from "./release/index.js";
+import {buildManifest,readManifest,writeManifest} from "./manifest/index.js";
+import { logger } from "./cli/index.js";
+import {buildRelease} from "./release/index.js";
 
 export default async function app() {
 
@@ -49,10 +42,10 @@ export default async function app() {
             newManifest.files
         );
 
-        console.log("Added     :", compareResult.added.length);
-        console.log("Modified  :", compareResult.modified.length);
-        console.log("Deleted   :", compareResult.deleted.length);
-        console.log("Unchanged :", compareResult.unchanged.length);
+       logger.info(`Added     : ${compareResult.added.length}`);
+logger.info(`Modified  : ${compareResult.modified.length}`);
+logger.info(`Deleted   : ${compareResult.deleted.length}`);
+logger.info(`Unchanged : ${compareResult.unchanged.length}`);
 
     }
 
@@ -67,6 +60,6 @@ export default async function app() {
         newManifest
     );
 
-    console.log("Manifest berhasil dibuat.");
+   logger.success("Manifest berhasil dibuat.");
 
 }

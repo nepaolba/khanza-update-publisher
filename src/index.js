@@ -1,8 +1,12 @@
 import app from "./app.js";
+
 import {
     banner,
-    getCommand
+    logger,
+    getCommand,
+     help, version
 } from "./cli/index.js";
+import handleError from "./error/handler.js";
 
 async function main() {
 
@@ -15,28 +19,27 @@ async function main() {
         case "publish":
 
             await app();
-
             break;
 
         case "version":
 
-            console.log("Khanza Update Publisher v1.0.0");
+    logger.info("Khanza Update Publisher v1.0.0");
 
-            break;
+    break;
 
-        default:
+      case "help":
 
-            console.log(`Command "${command}" tidak dikenal.`);
-            process.exit(1);
+    help();
 
+    break;
+
+       default:
+
+    throw new Error(
+        `Command "${command}" tidak dikenali.`
+    );
     }
 
 }
 
-main().catch(error => {
-
-    console.error(error);
-
-    process.exit(1);
-
-});
+main().catch(handleError);
